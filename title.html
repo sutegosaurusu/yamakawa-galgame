@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    山川ドキドキ！恋愛シミュレーションゲーム
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="css/title.css"
+  >
+
+</head>
+
+
+<body>
+
+
+  <main class="title-screen">
+
+
+    <!-- =================================================
+         タイトルスライド
+    ================================================== -->
+
+    <div
+      id="titleSlide"
+      class="title-slide"
+    >
+
+      <!-- 背景 -->
+
+      <div
+        id="titleBackground"
+        class="title-background"
+      ></div>
+
+
+      <!-- キャラクター -->
+
+      <img
+        id="titleCharacter"
+        class="title-character"
+        src=""
+        alt=""
+      >
+
+    </div>
+
+
+    <!-- =================================================
+         タイトル
+    ================================================== -->
+
+    <div class="title-area">
+
+      <h1>
+        山川ドキドキ！
+      </h1>
+
+      <h2>
+        恋愛シミュレーションゲーム
+      </h2>
+
+    </div>
+
+
+    <!-- =================================================
+         ボタン
+    ================================================== -->
+
+    <div class="title-buttons">
+
+      <button
+        id="startButton"
+        class="title-button start-button"
+        type="button"
+      >
+        ゲーム開始❤
+      </button>
+
+
+      <button
+        id="menuButton"
+        class="title-button menu-button"
+        type="button"
+      >
+        メニュー
+      </button>
+
+    </div>
+
+
+  </main>
+
+
+  <!-- ===================================================
+       JavaScript
+  ==================================================== -->
+
+  <script type="module">
+
+    import {
+      backgrounds
+    } from "./js/backgrounds.js";
+
+
+    import {
+      getCharacterImage
+    } from "./js/characters.js";
+
+
+    /* =================================================
+       タイトルスライド
+
+       background
+       → 背景ショートカット
+
+       character
+       → キャラクター＋立ち絵ショートカット
+    ================================================= */
+
+    const titleSlides = [
+
+      {
+        background: "教室前",
+        character: "柳-3"
+      },
+
+
+      {
+        background: "公園",
+        character: "山川"
+      },
+
+
+      {
+        background: "住宅街",
+        character: "中野"
+      }
+
+
+     
+
+    ];
+
+
+    /* =================================================
+       現在のスライド
+    ================================================= */
+
+    let titleSlideIndex = 0;
+
+
+    /* =================================================
+       DOM取得
+    ================================================= */
+
+    const titleBackground =
+      document.getElementById(
+        "titleBackground"
+      );
+
+
+    const titleCharacter =
+      document.getElementById(
+        "titleCharacter"
+      );
+
+
+    /* =================================================
+       キャラクター指定を分解
+       
+       山川
+       ↓
+       名前 = 山川
+       立ち絵 = 通常
+
+       山川-1hap
+       ↓
+       名前 = 山川
+       立ち絵 = 1hap
+    ================================================= */
+
+    function parseCharacterCommand(
+      value
+    ) {
+
+      const separator =
+        value.indexOf("-");
+
+
+      /* ハイフンがない場合 */
+
+      if (
+        separator === -1
+      ) {
+
+        return {
+
+          name:
+            value,
+
+          expression:
+            "通常"
+
+        };
+
+      }
+
+
+      return {
+
+        name:
+          value.slice(
+            0,
+            separator
+          ),
+
+        expression:
+          value.slice(
+            separator + 1
+          )
+
+      };
+
+    }
+
+
+    /* =================================================
+       スライド表示
+    ================================================= */
+
+    function showTitleSlide() {
+
+      const slide =
+        titleSlides[
+          titleSlideIndex
+        ];
+
+
+      /* ===============================================
+   背景
+=============================================== */
+
+const backgroundImage =
+  backgrounds[
+    slide.background
+  ];
+
+
+if (!backgroundImage) {
+
+  console.error(
+    "タイトル背景が見つかりません:",
+    slide.background
+  );
+
+} else {
+
+  titleBackground.classList.remove("move");
+
+  void titleBackground.offsetWidth;
+
+  titleBackground.style.backgroundImage =
+    `url("${backgroundImage}")`;
+
+  titleBackground.classList.add("move");
+}
+
+
+      /* ===============================================
+         キャラクター
+      =============================================== */
+
+      const characterData =
+        parseCharacterCommand(
+          slide.character
+        );
+
+
+      const characterImage =
+        getCharacterImage(
+          characterData.name,
+          characterData.expression
+        );
+
+
+      if (
+        !characterImage
+      ) {
+
+        console.error(
+          "タイトルキャラクターが見つかりません:",
+          slide.character
+        );
+
+      } else {
+
+        titleCharacter.src =
+          characterImage;
+
+      }
+
+
+      titleCharacter.alt =
+        characterData.name;
+
+
+      /* ===============================================
+         次のスライド
+      =============================================== */
+
+      titleSlideIndex++;
+
+
+      if (
+        titleSlideIndex >=
+        titleSlides.length
+      ) {
+
+        titleSlideIndex = 0;
+
+      }
+
+    }
+
+
+    /* =================================================
+       最初のスライド
+    ================================================= */
+
+    showTitleSlide();
+
+
+    /* =================================================
+       3秒ごとに変更
+    ================================================= */
+
+    setInterval(
+      showTitleSlide,
+      3000
+    );
+
+
+    /* =================================================
+       ゲーム開始
+    ================================================= */
+
+    document
+      .getElementById(
+        "startButton"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          location.href =
+            "game.html";
+
+        }
+      );
+
+
+    /* =================================================
+       メニュー
+    ================================================= */
+
+    document
+      .getElementById(
+        "menuButton"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          location.href =
+            "characters.html";
+
+        }
+      );
+
+  </script>
+
+
+</body>
+
+</html>

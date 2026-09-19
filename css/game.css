@@ -1,0 +1,637 @@
+css
+/* =====================================================
+   全体
+===================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  font-family:
+    "Gossip",
+    "Yu Gothic",
+    "Hiragino Kaku Gothic ProN",
+    sans-serif;
+
+  background: #000;
+}
+
+
+/* =====================================================
+   ゲーム画面
+===================================================== */
+
+.game-screen {
+  position: relative;
+
+  width: 100vw;
+  height: 100dvh;
+
+  min-height: 100vh;
+
+  overflow: hidden;
+
+  background: #000;
+
+  user-select: none;
+
+  -webkit-user-select: none;
+
+  -webkit-touch-callout: none;
+}
+
+
+/* =====================================================
+   PCではスマホ縦画面を中央表示
+===================================================== */
+
+@media (min-width: 700px) {
+
+  .game-screen {
+    width: 430px;
+    height: 100dvh;
+
+    min-height: 700px;
+
+    margin: 0 auto;
+  }
+
+}
+
+
+/* =====================================================
+   背景
+===================================================== */
+
+.background {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 0;
+
+  background-size: cover;
+
+  background-position: center;
+
+  background-repeat: no-repeat;
+
+  background-color: #222;
+
+  transition: none;
+}
+
+
+/* =====================================================
+   キャラクター表示レイヤー
+===================================================== */
+
+.characters-layer {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 10;
+
+  pointer-events: none;
+}
+
+
+/* =====================================================
+   キャラクター立ち絵
+   胸から上
+===================================================== */
+
+.character {
+  position: absolute;
+
+  left: 50%;
+
+  bottom: 28%;
+
+  transform:
+    translateX(-50%);
+
+  width: auto;
+
+  height: 48dvh;
+
+  max-width: 85%;
+
+  object-fit: contain;
+
+  object-position: center bottom;
+
+  pointer-events: auto;
+
+  user-select: none;
+
+  -webkit-user-drag: none;
+}
+
+
+/* =====================================================
+   キャラクター位置
+===================================================== */
+
+.character-left {
+  left: 30%;
+}
+
+.character-center {
+  left: 50%;
+}
+
+.character-right {
+  left: 70%;
+}
+
+
+/* =====================================================
+   吹き出し
+   画面下部 約3割
+===================================================== */
+
+.dialogue-box {
+  position: absolute;
+
+  left: 4%;
+  right: 4%;
+
+  bottom: 18%;
+  height: 12%;
+  min-height: 75px;
+
+  z-index: 30;
+
+  padding:
+    10px
+    14px
+    14px;
+
+  border-radius: 18px;
+
+  background:
+    rgba(255, 255, 255, 0.95);
+
+  box-shadow:
+    0
+    4px
+    12px
+    rgba(0, 0, 0, 0.30);
+
+  cursor: pointer;
+
+  overflow: hidden;
+
+  touch-action: manipulation;
+}
+
+/* =====================================================
+   名前欄
+===================================================== */
+
+.character-name {
+  display: inline-flex;
+
+  align-items: center;
+
+  min-height: 30px;
+
+  padding:
+    3px
+    12px;
+
+  margin-bottom: 8px;
+
+  border-radius: 8px;
+
+  background: #ffc1da;
+
+  color: #222;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  line-height: 1.2;
+}
+
+
+/* =====================================================
+   セリフ
+===================================================== */
+
+.dialogue-text {
+  width: 100%;
+
+  height:
+    calc(100% - 45px);
+
+  overflow: hidden;
+
+  white-space: pre-wrap;
+
+  word-break: break-word;
+
+  overflow-wrap: anywhere;
+
+  color: #000;
+
+  font-size: 18px;
+
+  line-height: 1.65;
+
+  text-align: left;
+}
+
+
+/* =====================================================
+   選択肢
+   セリフ欄とは別の位置
+===================================================== */
+
+.choices-container {
+  position: absolute;
+
+  top: 20%;
+
+  left: 8%;
+  right: 8%;
+
+  z-index: 40;
+
+  display: none;
+
+  flex-direction: column;
+
+  align-items: stretch;
+
+  gap: 12px;
+
+  pointer-events: auto;
+}
+
+
+/* =====================================================
+   選択肢ボタン
+   すべて同じ大きさ
+===================================================== */
+
+.choiceButton {
+  width: 100%;
+
+  height: 52px;
+
+  min-height: 52px;
+
+  max-height: 52px;
+
+  padding:
+    0
+    12px;
+
+  border:
+    2px
+    solid
+    rgba(0, 0, 0, 0.20);
+
+  border-radius: 12px;
+
+  background:
+    rgba(255, 255, 255, 0.96);
+
+  color: #222;
+
+  font-family: inherit;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  line-height: 1.2;
+
+  text-align: center;
+
+  cursor: pointer;
+
+  touch-action: manipulation;
+
+  box-shadow:
+    0
+    3px
+    7px
+    rgba(0, 0, 0, 0.20);
+}
+
+
+.choiceButton:active {
+  transform: scale(0.98);
+
+  background:
+    rgba(240, 240, 240, 0.96);
+}
+
+
+/* =====================================================
+   下部操作ボタン
+===================================================== */
+
+.game-controls {
+  position: absolute;
+
+  left: 5%;
+  right: 5%;
+
+  bottom: 14%;
+
+  z-index: 50;
+
+  display: flex;
+
+  justify-content: flex-end;
+
+  align-items: center;
+
+  gap: 6px;
+
+  pointer-events: auto;
+}
+
+/* =====================================================
+   次の話
+===================================================== */
+
+.next-file-button {
+  position: absolute;
+
+  left: 12%;
+  right: 12%;
+
+  top: 43%;
+
+  z-index: 60;
+
+  display: none;
+
+  height: 56px;
+
+  padding:
+    0
+    16px;
+
+  border:
+    2px
+    solid
+    rgba(0, 0, 0, 0.20);
+
+  border-radius: 14px;
+
+  background:
+    rgba(255, 255, 255, 0.95);
+
+  color: #222;
+
+  font-family: inherit;
+
+  font-size: 18px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  touch-action: manipulation;
+
+  box-shadow:
+    0
+    4px
+    10px
+    rgba(0, 0, 0, 0.25);
+}
+
+
+/* =====================================================
+   小さいスマホ画面
+===================================================== */
+
+@media (max-height: 650px) {
+
+  .character {
+    height: 43dvh;
+    bottom: 29%;
+  }
+
+  .dialogue-box {
+    bottom: 17%;
+    height: 13%;
+    min-height: 68px;
+  }
+
+  .dialogue-text {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .choiceButton {
+    height: 46px;
+    min-height: 46px;
+    max-height: 46px;
+    font-size: 15px;
+  }
+}
+
+
+/* =====================================================
+   横幅が狭いスマホ
+===================================================== */
+
+@media (max-width: 360px) {
+
+  .dialogue-box {
+    left: 3%;
+    right: 3%;
+  }
+
+
+  .choices-container {
+    left: 6%;
+    right: 6%;
+  }
+
+
+  .dialogue-text {
+    font-size: 16px;
+  }
+
+
+  .character-name {
+    font-size: 14px;
+
+    min-height: 28px;
+  }
+
+}
+/* =====================================================
+   カット画面
+===================================================== */
+
+.cut-screen {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 1000;
+
+  display: none;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background-image:
+    url("../images/cut/cut.png");
+
+  background-size: cover;
+
+  background-position: center;
+
+  background-repeat: no-repeat;
+
+  pointer-events: auto;
+}
+
+
+/* =====================================================
+   カットの「・・・」
+===================================================== */
+
+
+.cut-dots {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 14px;
+
+  font-size: 70px;
+
+  line-height: 1;
+}
+
+.cut-dots span {
+  display: block;
+
+  animation: cutDot 1.2s infinite;
+}
+
+.cut-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.cut-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes cutDot {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-18px);
+  }
+
+}
+
+/* =====================================================
+   「・・・」を順番に動かす
+===================================================== */
+
+@keyframes cutDot {
+
+  0%,
+  60%,
+  100% {
+    transform:
+      translateY(0);
+
+    opacity: 0.35;
+  }
+
+  30% {
+    transform:
+      translateY(-12px);
+
+    opacity: 1;
+  }
+
+}
+.story-title-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 1100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.story-title-text {
+  font-size: 52px;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  text-shadow:
+    0 0 8px black,
+    3px 3px 0 black,
+    -3px -3px 0 black,
+    3px -3px 0 black,
+    -3px 3px 0 black;
+}
+.episode-title-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+
+  display: none;
+  align-items: center;
+  justify-content: center;
+
+  background: #ff8fbd;
+}
+
+.episode-title-text {
+  margin: 0;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: clamp(32px, 10vw, 64px);
+  text-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+.game-screen {
+  --bubble-color: #ffc1da;
+}
+
+.character-name {
+  background: var(--bubble-color);
+}
+
+#skipButton,
+#logButton {
+  background: var(--bubble-color);
+  color: #ffffff;
+}

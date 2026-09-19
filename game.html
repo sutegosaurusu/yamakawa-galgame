@@ -1,0 +1,165 @@
+```html
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>山川ドキドキ！</title>
+
+  <link
+    rel="stylesheet"
+    href="css/game.css"
+  >
+
+</head>
+
+
+<body>
+
+  <main
+    id="gameScreen"
+    class="game-screen"
+  >
+
+    <!-- ================================================
+         背景
+    ================================================= -->
+
+    <div
+      id="background"
+      class="background"
+    ></div>
+
+<!-- =================================================
+     カット
+================================================== -->
+
+<div
+  id="cutScreen"
+  class="cut-screen"
+>
+  <div class="cut-dots">
+    <span>・</span>
+    <span>・</span>
+    <span>・</span>
+  </div>
+</div>
+
+<div id="storyStartScreen" class="story-title-screen">
+  <div id="storyTitleText" class="story-title-text">
+    　学園生活
+    　　スタート！！
+  </div>
+</div>
+<div id="episodeTitleScreen" class="episode-title-screen">
+  <p id="episodeTitleText" class="episode-title-text"></p>
+</div>
+    <!-- ================================================
+         キャラクター
+    ================================================= -->
+
+    <div
+      id="charactersLayer"
+      class="characters-layer"
+    ></div>
+
+
+    <!-- ================================================
+         選択肢
+         セリフ欄とは別の位置
+    ================================================= -->
+
+    <div
+      id="choicesContainer"
+      class="choices-container"
+    ></div>
+
+
+    <!-- ================================================
+         吹き出し
+    ================================================= -->
+
+    <section
+      id="dialogueBox"
+      class="dialogue-box"
+    >
+
+      <!-- 名前 -->
+      <div
+        id="characterName"
+        class="character-name"
+      ></div>
+
+
+      <!-- セリフ -->
+      <div
+        id="dialogueText"
+        class="dialogue-text"
+      ></div>
+
+    </section>
+
+
+    <!-- ================================================
+         下部操作
+    ================================================= -->
+
+    <div class="game-controls">
+
+      <button
+        id="skipButton"
+        type="button"
+      >
+        スキップ
+      </button>
+
+      <button
+        id="characterButton"
+        type="button"
+      >
+        キャラクター
+      </button>
+
+      <button
+        id="menuButton"
+        type="button"
+      >
+        メニュー
+      </button>
+
+    </div>
+
+
+    <!-- ================================================
+         次の話
+    ================================================= -->
+
+    <button
+      id="nextFileButton"
+      class="next-file-button"
+      type="button"
+    >
+
+      <span id="nextFileText">
+        次の話へ
+      </span>
+
+    </button>
+
+  </main>
+
+
+  <script
+    type="module"
+    src="js/game.js"
+  ></script>
+
+</body>
+</html>
+```

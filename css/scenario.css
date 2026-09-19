@@ -1,0 +1,59 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; font-family: "ゴシック体", "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif; color: #111; background: #111; }
+button { font: inherit; }
+
+.title-page, .game-page, .characters-page { min-height: 100dvh; display: grid; place-items: center; }
+.title-screen, .game-root { position: relative; width: min(100vw, 480px); height: min(100dvh, 900px); overflow: hidden; background: #222; }
+.title-screen { background: #b5d2df; }
+.title-image { position: absolute; inset: 0; background: linear-gradient(#c3dde8 0 45%, #e4d2b7 45% 100%); }
+.title-overlay { position: relative; z-index: 3; height: 100%; display: flex; flex-direction: column; align-items: center; padding: 7vh 18px 40px; gap: 14px; text-align: center; }
+h1 { margin: 0; font-size: clamp(24px, 7vw, 34px); line-height: 1.25; }
+.title-overlay h1 { text-shadow: 0 2px 4px #fff; }
+.main-button, .sub-button, .menu-item, .next-file-layer button { border: 0; border-radius: 14px; padding: 13px 18px; cursor: pointer; box-shadow: 0 4px 12px #0002; }
+.main-button { width: min(88%, 340px); background: #ff86b8; color: #fff; font-weight: 700; font-size: 19px; }
+.sub-button, .menu-item { width: min(88%, 340px); background: #fff; color: #222; }
+
+.background-layer { position: absolute; inset: 0; background: center / cover no-repeat #b9d7e6; }
+.character-layer { position: absolute; inset: 0 0 30%; display: flex; align-items: flex-end; justify-content: center; pointer-events: none; z-index: 2; }
+.character { height: 60%; max-width: 88%; object-fit: contain; object-position: bottom center; }
+.character.left { transform: translateX(-25%); }
+.character.right { transform: translateX(25%); }
+.character.center { transform: translateX(0); }
+
+.dialogue-area { position: absolute; left: 0; right: 0; bottom: 0; height: 30%; min-height: 190px; padding: 0 12px 10px; z-index: 5; display: flex; flex-direction: column; justify-content: flex-end; }
+.dialogue-bubble { position: relative; min-height: 128px; max-height: 165px; padding: 22px 16px 14px; background: #fff; border-radius: 20px; box-shadow: 0 8px 25px #0003; cursor: pointer; outline: none; }
+.name-box { position: absolute; top: -16px; left: 16px; min-width: 72px; padding: 6px 12px; background: #ffd6e7; border-radius: 10px; text-align: center; font-weight: 700; }
+.dialogue-text { white-space: pre-wrap; overflow: hidden; line-height: 1.55; font-size: 17px; max-height: 4.65em; }
+.small-controls { display: flex; gap: 8px; justify-content: flex-end; padding-top: 6px; }
+.small-controls button { border: 0; background: #ffffffd9; border-radius: 8px; padding: 5px 9px; font-size: 12px; cursor: pointer; }
+
+.choice-layer { position: absolute; left: 10%; right: 10%; top: 8%; z-index: 8; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.choice-button { width: min(78vw, 310px); height: 52px; border: 2px solid #333; border-radius: 12px; background: #fff; color: #111; font-size: 16px; cursor: pointer; box-shadow: 0 3px 10px #0003; }
+.hidden { display: none !important; }
+.next-file-layer { position: absolute; inset: 0; z-index: 10; display: grid; place-items: center; pointer-events: none; }
+.next-file-layer button { pointer-events: auto; background: #fff; color: #222; min-width: 60%; font-weight: 700; }
+
+.log-panel { position: absolute; inset: 0; z-index: 20; background: #fff; padding: 18px; overflow: auto; }
+.log-entry { display: flex; margin: 0 0 12px; }
+.log-entry.yamakawa { justify-content: flex-end; }
+.log-entry.yanagi { justify-content: flex-start; }
+.log-bubble { max-width: 82%; padding: 9px 12px; border-radius: 15px; background: #f4f4f4; }
+.log-entry.yamakawa .log-bubble { background: #ffd6e7; }
+.log-name { font-size: 11px; opacity: .7; margin-bottom: 3px; }
+
+.modal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; background: #0006; }
+.modal-card { position: relative; width: min(90vw, 360px); padding: 24px; background: #fff; border-radius: 18px; text-align: center; }
+.close-button { position: absolute; top: 8px; right: 10px; border: 0; background: transparent; font-size: 28px; cursor: pointer; }
+.menu-note { font-size: 12px; opacity: .7; }
+
+.characters-page { background: #fafafa; padding: 24px 12px; }
+.gallery { width: min(100%, 480px); text-align: center; }
+.character-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0; }
+.character-card { background: #fff; border-radius: 14px; padding: 10px; box-shadow: 0 3px 12px #0002; }
+.character-card img { width: 100%; height: 210px; object-fit: contain; }
+.character-card strong { display: block; margin-top: 6px; }
+.silhouette { height: 210px; background: radial-gradient(circle at 50% 30%, #111 0 13%, transparent 14%), radial-gradient(ellipse at 50% 62%, #111 0 35%, transparent 36%); filter: blur(1px); }
+
+@media (min-width: 700px) {
+  body { background: #ddd; }
+}
