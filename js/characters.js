@@ -202,7 +202,91 @@ export const characters = {
     }
   },
 
+  けんご: {
 
+  id: "けんご",
+
+  name: "けんご",
+
+  color: "#000000",
+
+  images: {
+
+    /* c=けんご */
+    "通常":
+      "images/characters/kengo-1.png",
+
+    /* c=けんご-1 */
+    "1":
+      "images/characters/kengo-1.png",
+
+    /* c=けんご-1touka */
+    "1touka":
+      "images/characters/kengo-1touka.png",
+
+    /* c=けんご-2 */
+    "2":
+      "images/characters/kengo-2.png",
+
+    /* c=けんご-2touka */
+    "2touka":
+      "images/characters/kengo-2touka.png",
+
+  },
+
+},
+
+パ〇モン: {
+
+  id: "パ〇モン",
+
+  name: "パ〇モン",
+
+  color: "#ffffff",
+
+  images: {
+
+    /* c=パ〇モン */
+    "通常":
+      "images/characters/paimon-1.png",
+
+  },
+
+},
+
+校長: {
+
+  id: "校長",
+
+  name: "校長",
+
+  color: "linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet)",
+
+  images: {
+
+    /* c=校長 */
+    "通常":
+      "images/characters/kouchou-1.png",
+
+    /* c=校長-1 */
+    "1":
+      "images/characters/kouchou-1.png",
+
+    /* c=校長-1hap */
+    "1hap":
+      "images/characters/kouchou-1hap.png",
+
+    /* c=校長-2 */
+    "2":
+      "images/characters/kouchou-2.png",
+
+    /* c=校長-3 */
+    "3":
+      "images/characters/kouchou-3.png",
+
+  },
+
+},
   /* ===================================================
      中野
   =================================================== */
