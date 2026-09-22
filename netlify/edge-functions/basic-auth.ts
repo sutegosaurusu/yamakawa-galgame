@@ -5,15 +5,69 @@
 //   BASIC_AUTH_USER     (例: friend)
 //   BASIC_AUTH_PASSWORD (例: 好きなパスワード)
 // を設定してから使う。
+//
+// ※修正点:
+// ・Netlify.env の呼び出しでエラーが起きても
+//   クラッシュせず、Deno.env にフォールバックするようにした。
+// ・認証OK時は context.next() を明示的に呼ぶようにした。
+// ・日本語(漢字)を含むID・パスワードでも
+//   btoaがクラッシュしないようにした。
+//   (btoaはUTF-8の日本語をそのまま扱えないため、
+//   一度バイト列に変換してから渡す)
 // =====================================================
 
-export default async (request: Request) => {
+function getEnv(key: string): string | undefined {
 
-  const user =
-    Deno.env.get("BASIC_AUTH_USER");
+  try {
 
-  const pass =
-    Deno.env.get("BASIC_AUTH_PASSWORD");
+    // @ts-ignore
+    if (typeof Netlify !== "undefined" && Netlify && Netlify.env) {
+
+      // @ts-ignore
+      const value = Netlify.env.get(key);
+
+      if (value) {
+        return value;
+      }
+    }
+
+  } catch (_error) {
+    // 何もしない(下のDeno.envへ進む)
+  }
+
+  try {
+    return Deno.env.get(key);
+  } catch (_error) {
+    return undefined;
+  }
+}
+
+
+/* =====================================================
+   日本語(漢字)を含む文字列でも安全にBase64化する
+
+   btoaはUTF-8の文字をそのまま渡すとエラーになるため、
+   一度バイト列(Latin1相当の文字列)に変換してから渡す。
+===================================================== */
+
+function base64EncodeUtf8(text: string): string {
+
+  const bytes = new TextEncoder().encode(text);
+
+  let binary = "";
+
+  for (const byte of bytes) {
+    binary += String.fromCharCode(byte);
+  }
+
+  return btoa(binary);
+}
+
+
+export default async (request: Request, context: any) => {
+
+  const user = getEnv("BASIC_AUTH_USER");
+  const pass = getEnv("BASIC_AUTH_PASSWORD");
 
   // 環境変数が未設定の場合は、
   // 誤って全公開にならないよう常にブロックする
@@ -28,10 +82,15 @@ export default async (request: Request) => {
     request.headers.get("authorization");
 
   const expected =
-    "Basic " + btoa(`${user}:${pass}`);
+    "Basic " + base64EncodeUtf8(`${user}:${pass}`);
 
   if (authHeader === expected) {
+
     // 認証OK → 元々のページをそのまま返す
+    if (context && typeof context.next === "function") {
+      return context.next();
+    }
+
     return;
   }
 
