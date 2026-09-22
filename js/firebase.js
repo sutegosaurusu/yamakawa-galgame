@@ -25,25 +25,25 @@ import {
 const firebaseConfig = {
 
   apiKey:
-    "ここにあなたのapiKey",
+    "AIzaSyApv0E9G3ectx2bpZHjRvUtH6M8dwxs5oI",
 
   authDomain:
-    "ここにあなたのauthDomain",
+    "yamakawa-galgame.firebaseapp.com",
 
   databaseURL:
-    "ここにあなたのdatabaseURL",
+    "https://yamakawa-galgame-default-rtdb.firebaseio.com",
 
   projectId:
-    "ここにあなたのprojectId",
+    "yamakawa-galgame",
 
   storageBucket:
-    "ここにあなたのstorageBucket",
+    "yamakawa-galgame.firebasestorage.app",
 
   messagingSenderId:
-    "ここにあなたのmessagingSenderId",
+    "836080494904",
 
   appId:
-    "ここにあなたのappId"
+    "1:836080494904:web:5261ac38f02949737c79cd"
 
 };
 
