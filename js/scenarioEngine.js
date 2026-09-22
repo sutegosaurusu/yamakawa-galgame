@@ -40,6 +40,18 @@ function parseSimpleLine(line) {
     return { type: "cut", name: cutName || "通常" };
   }
 
+  // 好感度変更
+  // 例：好感度+5
+  //     好感度-5
+  const affectionMatch = line.match(/^好感度([+-]\d+)$/);
+
+  if (affectionMatch) {
+    return {
+      type: "affection",
+      amount: Number(affectionMatch[1])
+    };
+  }
+
   const match = line.match(/^([a-zA-Z]+)\s*=(.*)$/);
 
   if (!match) {
@@ -49,7 +61,10 @@ function parseSimpleLine(line) {
   const key = match[1].toLowerCase();
   const value = match[2].trim();
 
-  return { type: key, value: value };
+  return {
+    type: key,
+    value: value
+  };
 }
 
 

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>メニュー</title>
+
+  <link
+    rel="stylesheet"
+    href="menu.css"
+  >
+
+</head>
+
+
+<body>
+
+  <div class="menuPage">
+
+    <!-- =========================================
+         ヘッダー
+    ========================================== -->
+
+    <header class="menuHeader">
+
+      <h1>メニュー</h1>
+
+    </header>
+
+
+    <main class="menuMain">
+
+
+      <!-- =========================================
+           進行状況
+      ========================================== -->
+
+      <section class="panel">
+
+        <h2>進行状況</h2>
+
+        <div
+          id="progressText"
+          class="progressText"
+        >
+          読み込み中...
+        </div>
+
+
+        <div class="progressBar">
+
+          <div
+            id="progressFill"
+            class="progressFill"
+          ></div>
+
+        </div>
+
+
+        <div
+          id="progressPercent"
+          class="progressPercent"
+        >
+          0%
+        </div>
+
+      </section>
+
+
+      <!-- =========================================
+           好感度
+      ========================================== -->
+
+      <section class="panel">
+
+        <h2>キャラクター</h2>
+
+        <div
+          id="characterList"
+          class="characterList"
+        ></div>
+
+      </section>
+
+
+      <!-- =========================================
+           戻る
+      ========================================== -->
+
+      <button
+        id="backButton"
+        class="backButton"
+        type="button"
+      >
+        ゲームに戻る
+      </button>
+
+
+    </main>
+
+  </div>
+
+
+  <script
+    type="module"
+    src="menu.js"
+  ></script>
+
+</body>
+
+</html>

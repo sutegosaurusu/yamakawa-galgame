@@ -25,9 +25,9 @@ import {
 import {
   loadSave,
   saveState,
-  clearSave
+  clearSave,
+  loadCloudSave
 } from "./save.js";
-
 
 /* =====================================================
    DOM
@@ -81,6 +81,11 @@ const episodeTitleScreen =
 const episodeTitleText =
   document.getElementById("episodeTitleText");
 
+const affectionNotice =
+  document.getElementById("affectionNotice");
+
+const affectionNoticeText =
+  document.getElementById("affectionNoticeText");
 
 /* =====================================================
    ゲーム状態
@@ -91,6 +96,8 @@ let currentFile = "opening.js";
 let commands = [];
 
 let commandIndex = 0;
+
+let affectionData = {};
 
 let state = {
   background: null,
@@ -373,7 +380,65 @@ function runNextCommand() {
 
       return;
     }
+/* =================================================
+   好感度
+================================================= */
 
+if (
+  command.type === "affection"
+) {
+
+  const characterId =
+    state.talker;
+
+  if (!characterId) {
+
+    console.warn(
+      "好感度変更先のキャラクターがありません"
+    );
+
+    continue;
+  }
+
+  const current =
+    Number(
+      affectionData[characterId] || 0
+    );
+
+  const next =
+    Math.max(
+      0,
+      Math.min(
+        100,
+        current + command.amount
+      )
+    );
+
+  affectionData[characterId] =
+    next;
+
+  showAffectionNotice(
+    characterId,
+    command.amount
+  );
+
+  console.log(
+    `${characterId}の好感度: ${current} → ${next}`
+  );
+
+  continue;
+}
+
+
+/* =================================================
+   通常コマンド
+================================================= */
+
+state =
+  applyCommand(
+    command,
+    state
+  );
     /* 通常コマンド */
     state = applyCommand(command, state);
 
@@ -531,7 +596,42 @@ function updateName() {
   }
 }
 
+/* =====================================================
+   好感度変化表示
+===================================================== */
 
+let affectionNoticeTimer = null;
+
+function showAffectionNotice(characterId, amount) {
+
+  if (
+    !affectionNotice ||
+    !affectionNoticeText
+  ) {
+    return;
+  }
+
+  const sign =
+    amount > 0
+      ? "+"
+      : "";
+
+  affectionNoticeText.textContent =
+    `${characterId}　好感度 ${sign}${amount}`;
+
+  affectionNotice.classList.add("show");
+
+  if (affectionNoticeTimer) {
+    clearTimeout(affectionNoticeTimer);
+  }
+
+  affectionNoticeTimer =
+    setTimeout(() => {
+
+      affectionNotice.classList.remove("show");
+
+    }, 1200);
+}
 /* =====================================================
    セリフ表示
 ===================================================== */
@@ -882,7 +982,7 @@ skipButton.addEventListener("click", event => {
     }
   }
 
-  saveProgress();
+  
   finishCommands();
 });
 
@@ -896,11 +996,11 @@ menuButton.addEventListener("click", event => {
   openMenu();
 });
 
-function openMenu() {
-  alert(
-    "メニュー\n\n" +
-    "キャラクター図鑑は characters.html から開けます。"
-  );
+ function openMenu() {
+
+  location.href =
+    "menu.html";
+
 }
 
 
@@ -921,11 +1021,27 @@ characterButton.addEventListener("click", event => {
 function saveProgress() {
 
   saveState({
-    file: currentFile,
-    index: commandIndex,
-    unlockedCharacters: state.unlockedCharacters,
-    choices: state.choices
+
+    file:
+      currentFile,
+
+    index:
+      commandIndex,
+
+    total:
+      commands.length,
+
+    affection:
+      affectionData,
+
+    unlockedCharacters:
+      state.unlockedCharacters,
+
+    choices:
+      state.choices
+
   });
+
 }
 
 
@@ -949,32 +1065,106 @@ async function handleChoiceSave(choice) {
 
 async function initializeGame() {
 
-  const saved = loadSave();
+  /* =================================================
+     ローカル保存
+  ================================================= */
 
-  if (saved && saved.file) {
+  const localSaved =
+    loadSave();
 
-    const shouldResume = confirm("前回の続きから始めますか？");
 
-    if (shouldResume) {
+  /* =================================================
+     Firebase保存
+  ================================================= */
 
-      state.unlockedCharacters = saved.unlockedCharacters || [];
-      state.choices = saved.choices || {};
+  const cloudSaved =
+    await loadCloudSave();
 
-      await loadScenarioFileWithPreload(
-        saved.file,
-        saved.index || 0
+
+  /* =================================================
+     Firebaseを優先
+  ================================================= */
+
+  const saved =
+    cloudSaved &&
+    cloudSaved.file
+      ? cloudSaved
+      : localSaved;
+
+
+  /* =================================================
+     保存データがある
+  ================================================= */
+
+  if (
+    saved &&
+    saved.file
+  ) {
+
+    const shouldResume =
+      confirm(
+        "前回の続きから始めますか？"
       );
 
+
+    if (
+      shouldResume
+    ) {
+
+      state.unlockedCharacters =
+        saved.unlockedCharacters ||
+        [];
+
+
+      state.choices =
+        saved.choices ||
+        {};
+
+
+      affectionData =
+        saved.affection ||
+        {};
+
+
+      await loadScenarioFile(
+
+        saved.file,
+
+        saved.index || 0
+
+      );
+
+
       return;
+
     }
 
-    clearSave();
+
+    await clearSave();
+
   }
 
-  state.unlockedCharacters = [];
-  state.choices = {};
 
-  await loadScenarioFileWithPreload("opening.js");
+  /* =================================================
+     最初から
+  ================================================= */
+
+  state.unlockedCharacters =
+    [];
+
+
+  state.choices =
+    {};
+
+
+  affectionData =
+    {};
+
+
+  await loadScenarioFile(
+    "opening.js"
+  );
+
 }
 
 

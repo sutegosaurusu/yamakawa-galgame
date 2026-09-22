@@ -17,6 +17,8 @@ export const characters = {
 
     color: "#b9dcff",
 
+    affection: true,
+
     images: {
 
       /* c=山川 */
@@ -114,6 +116,8 @@ export const characters = {
 
     color: "#ffc1da",
 
+    affection: true,
+
     images: {
 
       /* c=柳 */
@@ -210,6 +214,8 @@ export const characters = {
 
   color: "#000000",
 
+  affection: true,
+
   images: {
 
     /* c=けんご */
@@ -244,6 +250,8 @@ export const characters = {
 
   color: "#ffffff",
 
+  affection: true,
+
   images: {
 
     /* c=パ〇モン */
@@ -261,6 +269,8 @@ export const characters = {
   name: "校長",
 
   color: "linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet)",
+
+  affection: true,
 
   images: {
 
@@ -299,6 +309,8 @@ export const characters = {
 
     color: "#d8c6ff",
 
+    affection: true,
+    
     images: {
 
       /* c=中野 */

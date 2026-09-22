@@ -635,3 +635,49 @@ body {
   background: var(--bubble-color);
   color: #ffffff;
 }
+/* =====================================================
+   好感度変化表示
+===================================================== */
+
+.affection-notice {
+  position: absolute;
+
+  left: 50%;
+  top: 38%;
+
+  transform: translate(-50%, -50%);
+
+  z-index: 70;
+
+  padding:
+    10px
+    22px;
+
+  border-radius: 14px;
+
+  background:
+    rgba(255, 255, 255, 0.95);
+
+  color: #ff4f91;
+
+  font-size: 22px;
+
+  font-weight: 700;
+
+  box-shadow:
+    0
+    4px
+    12px
+    rgba(0, 0, 0, 0.25);
+
+  pointer-events: none;
+
+  opacity: 0;
+
+  transition:
+    opacity 0.2s ease;
+}
+
+.affection-notice.show {
+  opacity: 1;
+}

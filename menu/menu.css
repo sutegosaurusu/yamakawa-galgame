@@ -1,0 +1,107 @@
+/* =========================================
+   好感度メーター
+========================================= */
+
+.affectionMeter {
+
+  position:
+    relative;
+
+  width:
+    100%;
+
+  max-width:
+    180px;
+
+  height:
+    34px;
+
+  overflow:
+    hidden;
+
+  background:
+    #e5ded3;
+
+  border:
+    3px solid #62594e;
+
+  border-radius:
+    12px;
+
+}
+
+
+/* 中身 */
+
+.affectionFill {
+
+  position:
+    absolute;
+
+  left:
+    0;
+
+  top:
+    0;
+
+  height:
+    100%;
+
+  width:
+    0%;
+
+  background:
+    #e87992;
+
+  transition:
+    width 0.5s ease;
+
+}
+
+
+/* 目盛り */
+
+.affectionMeter::before {
+
+  content:
+    "100";
+
+  position:
+    absolute;
+
+  top:
+    50%;
+
+  right:
+    -30px;
+
+  transform:
+    translateY(-50%);
+
+  font-size:
+    12px;
+
+}
+
+
+.affectionMeter::after {
+
+  content:
+    "0";
+
+  position:
+    absolute;
+
+  top:
+    50%;
+
+  left:
+    -18px;
+
+  transform:
+    translateY(-50%);
+
+  font-size:
+    12px;
+
+}
