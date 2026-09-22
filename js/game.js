@@ -312,7 +312,7 @@ async function loadScenarioFileWithPreload(
     episodeTitleScreen.style.display = "flex";
   }
 
-  const minDisplay = wait(canShowScreen ? 1200 : 0);
+  const minDisplay = wait(canShowScreen ? 5000 : 0);
 
   const preload =
     collectImageUrls(fileName).then(preloadImages);
