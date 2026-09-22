@@ -6,7 +6,8 @@
 
 import {
   parseScenario,
-  applyCommand
+  applyCommand,
+  parseCharacter
 } from "./scenarioEngine.js";
 
 import {
@@ -181,6 +182,148 @@ async function loadScenarioFile(
       error.message
     );
   }
+}
+
+
+/* =====================================================
+   画像プリロード
+
+   これから表示する背景・キャラクター画像を
+   事前に裏側で読み込んでおくことで、
+   本編表示時のカクつき・読み込み待ちを減らす。
+===================================================== */
+
+function addImageUrlsFromCommand(command, urls) {
+
+  if (command.type === "b" && command.value) {
+
+    const image = backgrounds[command.value];
+
+    if (image) {
+      urls.add(image);
+    }
+  }
+
+  if (command.type === "c" && command.value) {
+
+    const character = parseCharacter(command.value);
+    const data = characters[character.name];
+
+    if (data) {
+
+      const image =
+        data.images[character.expression] ||
+        data.images["通常"] ||
+        data.images["normal"];
+
+      if (image) {
+        urls.add(image);
+      }
+    }
+  }
+
+  /* 選択肢の分岐内で使われる画像も対象にする */
+
+  if (command.type === "choice" && command.branches) {
+
+    Object.values(command.branches).forEach(branchCommands => {
+
+      branchCommands.forEach(subCommand => {
+        addImageUrlsFromCommand(subCommand, urls);
+      });
+    });
+  }
+}
+
+async function collectImageUrls(fileName) {
+
+  try {
+
+    const response =
+      await fetch(`scenario/${fileName}`);
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const raw = await response.text();
+    const parsedCommands = parseScenario(raw);
+
+    const urls = new Set();
+
+    parsedCommands.forEach(command => {
+      addImageUrlsFromCommand(command, urls);
+    });
+
+    return Array.from(urls);
+
+  } catch (error) {
+
+    console.warn("画像の先読みリスト取得に失敗:", error);
+    return [];
+  }
+}
+
+function preloadImages(urls) {
+
+  const promises = urls.map(url => {
+
+    return new Promise(resolve => {
+
+      const img = new Image();
+
+      img.onload = () => resolve();
+      img.onerror = () => resolve();
+
+      img.src = url;
+    });
+  });
+
+  return Promise.all(promises);
+}
+
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+/* =====================================================
+   先読みしてからシナリオを開始する
+
+   話数タイトル画面(episodeTitleScreen)がある場合は
+   そこに表示している間に先読みを済ませる。
+   無い場合は素通しで通常通り読み込む。
+===================================================== */
+
+async function loadScenarioFileWithPreload(
+  fileName,
+  startIndex = 0,
+  titleText = null
+) {
+
+  const canShowScreen = !!episodeTitleScreen;
+
+  if (canShowScreen) {
+
+    if (episodeTitleText) {
+      episodeTitleText.textContent = titleText || "";
+    }
+
+    episodeTitleScreen.style.display = "flex";
+  }
+
+  const minDisplay = wait(canShowScreen ? 1200 : 0);
+
+  const preload =
+    collectImageUrls(fileName).then(preloadImages);
+
+  await Promise.all([minDisplay, preload]);
+
+  if (canShowScreen) {
+    episodeTitleScreen.style.display = "none";
+  }
+
+  await loadScenarioFile(fileName, startIndex);
 }
 
 
@@ -608,29 +751,14 @@ function extractEpisodeNumber(fileName) {
 
 function startEpisode(fileName) {
 
-  if (!episodeTitleScreen) {
-    loadScenarioFile(fileName);
-    return;
-  }
-
   const episodeNumber = extractEpisodeNumber(fileName);
 
-  if (episodeTitleText) {
-    episodeTitleText.textContent =
-      episodeNumber !== null
-        ? `第${episodeNumber}話`
-        : "";
-  }
+  const titleText =
+    episodeNumber !== null
+      ? `第${episodeNumber}話`
+      : "";
 
-  episodeTitleScreen.style.display = "flex";
-
-  setTimeout(() => {
-
-    episodeTitleScreen.style.display = "none";
-
-    loadScenarioFile(fileName);
-
-  }, 1800);
+  loadScenarioFileWithPreload(fileName, 0, titleText);
 }
 
 
@@ -832,7 +960,10 @@ async function initializeGame() {
       state.unlockedCharacters = saved.unlockedCharacters || [];
       state.choices = saved.choices || {};
 
-      await loadScenarioFile(saved.file, saved.index || 0);
+      await loadScenarioFileWithPreload(
+        saved.file,
+        saved.index || 0
+      );
 
       return;
     }
@@ -843,7 +974,7 @@ async function initializeGame() {
   state.unlockedCharacters = [];
   state.choices = {};
 
-  await loadScenarioFile("opening.js");
+  await loadScenarioFileWithPreload("opening.js");
 }
 
 
