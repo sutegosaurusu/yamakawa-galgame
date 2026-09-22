@@ -10,13 +10,14 @@
 // ・Netlify.env の呼び出しでエラーが起きても
 //   クラッシュせず、Deno.env にフォールバックするようにした。
 // ・認証OK時は context.next() を明示的に呼ぶようにした。
+// ・日本語(漢字)を含むID・パスワードでも
+//   btoaがクラッシュしないようにした。
+//   (btoaはUTF-8の日本語をそのまま扱えないため、
+//   一度バイト列に変換してから渡す)
 // =====================================================
 
 function getEnv(key: string): string | undefined {
 
-  // 新しい書き方(Netlify.env)を試す。
-  // ここで何か例外が起きても、クラッシュさせずに
-  // 従来の書き方(Deno.env)へフォールバックする。
   try {
 
     // @ts-ignore
@@ -41,6 +42,28 @@ function getEnv(key: string): string | undefined {
   }
 }
 
+
+/* =====================================================
+   日本語(漢字)を含む文字列でも安全にBase64化する
+
+   btoaはUTF-8の文字をそのまま渡すとエラーになるため、
+   一度バイト列(Latin1相当の文字列)に変換してから渡す。
+===================================================== */
+
+function base64EncodeUtf8(text: string): string {
+
+  const bytes = new TextEncoder().encode(text);
+
+  let binary = "";
+
+  for (const byte of bytes) {
+    binary += String.fromCharCode(byte);
+  }
+
+  return btoa(binary);
+}
+
+
 export default async (request: Request, context: any) => {
 
   const user = getEnv("BASIC_AUTH_USER");
@@ -59,7 +82,7 @@ export default async (request: Request, context: any) => {
     request.headers.get("authorization");
 
   const expected =
-    "Basic " + btoa(`${user}:${pass}`);
+    "Basic " + base64EncodeUtf8(`${user}:${pass}`);
 
   if (authHeader === expected) {
 
